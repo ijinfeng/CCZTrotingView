@@ -1,5 +1,9 @@
 # CCZTrotingView
-走马灯视图，图文排布，动态视图，让信息提示更彰显华丽
+### 最新更新
+1. 新增文本数组Api
+2. 修复隐藏的一个bug，及其他一些优化
+
+![image](https://github.com/CranzCapatain/CCZTrotingView/blob/master/CCZGuideView_gif.gif)
 ===
 *属性／方法介绍：
 ===
