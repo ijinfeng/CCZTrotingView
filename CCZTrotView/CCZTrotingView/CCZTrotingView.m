@@ -8,16 +8,16 @@
 
 #import "CCZTrotingView.h"
 
-typedef void(^trotingBlock)();
+typedef void(^CCZTrotingBlock)();
 @interface CCZTrotingView ()<CAAnimationDelegate>
 @property (nonatomic, assign) CGSize size;
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) CAKeyframeAnimation *trotingXAnimation;
 @property (nonatomic, strong) CAKeyframeAnimation *trotingYAnimation;
 @property (nonatomic, strong) NSMutableArray *trotViewArr;  /**< 用于存放待滚动的view的*/
-@property (nonatomic, copy)   trotingBlock stopBlock;
-@property (nonatomic, copy)   trotingBlock startBlock;
-@property (nonatomic, copy)   trotingBlock trotingBlock;
+@property (nonatomic, copy)   CCZTrotingBlock stopBlock;
+@property (nonatomic, copy)   CCZTrotingBlock startBlock;
+@property (nonatomic, copy)   CCZTrotingBlock trotingBlock;
 @end
 
 @implementation CCZTrotingView
@@ -86,6 +86,7 @@ typedef void(^trotingBlock)();
         return;
     }
     self.hidden = NO;
+    _isTroting = YES;
     
     if (self.trotingBlock) {
         self.trotingBlock();
@@ -167,7 +168,7 @@ typedef void(^trotingBlock)();
     return _trotingYAnimation;
 }
 
-#pragma mark -- public
+#pragma mark - public
 
 - (void)addTrotView:(UIView *)trotView {
     if (self.currentTrotView) {
@@ -205,7 +206,7 @@ typedef void(^trotingBlock)();
     [self setNeedsLayout];
 }
 
-#pragma mark -- Set
+#pragma mark - Set
 
 - (void)setBackgroundImage:(UIImage *)backgroundImage {
     _backgroundImage = backgroundImage;
@@ -236,10 +237,9 @@ typedef void(^trotingBlock)();
     self.hidden = hideWhenStopTroting;
 }
 
-#pragma mark -- Animation delegate
+#pragma mark - Animation delegate
 
 - (void)animationDidStart:(CAAnimation *)anim {
-    _isTroting = YES;
     
     if (self.startBlock) {
         self.startBlock();
@@ -248,7 +248,6 @@ typedef void(^trotingBlock)();
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     _isTroting = NO;
-    
     self.hidden = self.hideWhenStopTroting;
     
     if (self.stopBlock) {

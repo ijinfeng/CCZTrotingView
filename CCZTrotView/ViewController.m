@@ -22,55 +22,54 @@
     
     CCZTrotingLabel *label = [[CCZTrotingLabel alloc] init];
     label.frame = CGRectMake(30, 40, 300, 30);
-    label.rate = CCZTrotingRateFast;
-    [label addText:@"恭喜雷姆玩家获得999朵玫瑰"];
+//    label.rate = CCZTrotingRateFast;
+    label.direction = CCZTrotDirectionTop;
     [self.view addSubview:label];
     self.trotView = label;
+    label.repeatTextArr = YES;
     label.hideWhenStopTroting = YES;
     label.pause = 2;
     label.backgroundImage = [UIImage imageNamed:@"1"];
+    
+    // 添加滚动文本
+    [label addTextArray:@[@"恭喜xxx获得森气",@"今晚9点我们不见不散",@"今日的风儿甚是喧嚣",@"iOS开发真是屌",@"xxxxx我爱你！！！"]];
+    
     
     UIImageView *head = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"headr.jpg"]];
     head.frame = CGRectMake(0, 0, 30, 30);
     label.leftView = head;
     
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [btn setTitle:@"添加新文本" forState:UIControlStateNormal];
-    btn.frame = CGRectMake(100, 200, 80, 40);
-    [self.view addSubview:btn];
-    [btn addTarget:self action:@selector(didClickButton) forControlEvents:UIControlEventTouchUpInside];
     
     
-//    
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"headr.jpg"]];
-    imageView.frame = CGRectMake(0, 0, 40, 40);
-    CCZTrotingView *trotView = [[CCZTrotingView alloc] initWithFrame:CGRectMake(40, 300, 320, 40)];
-    trotView.duration = 2.5;
-    UIView *left = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 40)];
-    left.backgroundColor = [UIColor redColor];
-    UIView *right = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 40)];
-    right.backgroundColor = [UIColor grayColor];
-    trotView.leftView = left;
-    trotView.rightView = right;
-    trotView.autoTrotingRepeat = YES;
-    trotView.pause = 1.5;
-    [trotView addTrotView:imageView];
+    /// 按钮控制
+    UIButton *button1 = [[UIButton alloc] initWithFrame:CGRectMake(100, 200, 100, 40)];
+    [button1 setTitle:@"添加新文本" forState:UIControlStateNormal];
+    [self.view addSubview:button1];
+    [button1 addTarget:self action:@selector(didClickButton) forControlEvents:UIControlEventTouchUpInside];
+    
 
-    [self.view addSubview:trotView];
+    UIButton *button2 = [[UIButton alloc] initWithFrame:CGRectMake(100, 300, 100, 40)];
+    [button2 setTitle:@"删除全部" forState:UIControlStateNormal];
+    [self.view addSubview:button2];
+    [button2 addTarget:self action:@selector(didClickRemoveAll) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    UIButton *button3 = [[UIButton alloc] initWithFrame:CGRectMake(100, 400, 100, 40)];
+    [button3 setTitle:@"删除第2个" forState:UIControlStateNormal];
+    [self.view addSubview:button3];
+    [button3 addTarget:self action:@selector(didClickRemoveIndex) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)didClickButton {
-    
-    CCZTrotingAttribute *att = [[CCZTrotingAttribute alloc] init];
-    att.text = @"恭喜雷姆玩家获得999朵玫瑰";
-    UIColor *color  = [UIColor colorWithRed:arc4random() % 255 / 255. green:arc4random() % 255 / 255. blue:arc4random() % 255 / 255. alpha:1];
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:att.text];
-    [attr addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(2, 2)];
-
-    att.attribute = attr;
-    self.trotView.rate = CCZTrotingRateFast;
-    [self.trotView addTrotAttribute:att];
+    [self.trotView addTextArray:@[@"每个人心中都有一颗常青树",@"2017将是我的转折点",@"同志祝你好运"]];
 }
 
+- (void)didClickRemoveAll {
+    [self.trotView removeAllAttribute];
+}
+
+- (void)didClickRemoveIndex {
+    [self.trotView removeAttributeAtIndex:2];
+}
 
 @end

@@ -9,8 +9,10 @@
 #import "CCZTrotingLabel.h"
 
 @interface CCZTrotingLabel ()
+@property (nonatomic, strong, readwrite) UILabel *currentLabel;
 @property (nonatomic, strong) NSMutableArray *attributeArr;
 @property (nonatomic, assign) CGFloat normalRate;
+@property (nonatomic, assign) NSUInteger index; // 控制滚动的文本显示
 @end
 
 @implementation CCZTrotingLabel
@@ -30,13 +32,28 @@
     return self;
 }
 
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self basicSetting];
+    }
+    return self;
+}
+
 - (void)basicSetting {
     self.rate = CCZTrotingRateNormal;
+    self.index = 0;
+    self.repeatTextArr = NO;
     
     __weak typeof(self) weakSelf = self;
     [self trotingStop:^{
         if (weakSelf.attributeArr.count) {
-            [weakSelf.attributeArr removeObject:weakSelf.attributeArr.firstObject];
+            if (weakSelf.repeatTextArr == YES) {
+                weakSelf.index == weakSelf.attributeArr.count - 1? weakSelf.index = 0 : weakSelf.index++;
+            } else {
+                [weakSelf.attributeArr removeObject:weakSelf.attributeArr.firstObject];
+            }
+
             if (weakSelf.attributeArr.count != 0) {
                 [weakSelf addTrotAttribute:nil];
             }
@@ -44,22 +61,24 @@
     }];
 }
 
+#pragma mark - add att
+
 - (void)addTrotAttribute:(CCZTrotingAttribute *)attribute {
     if (attribute) {
         [self.attributeArr addObject:attribute];
     }
     
-    CCZTrotingAttribute *trotingAtt = self.attributeArr.firstObject;
-    
-    if (!self.isTroting && _currentLabel) {
-        [self trotingWithAttribute:trotingAtt];
-        [self updateTroting];
-    }
+    CCZTrotingAttribute *trotingAtt = self.attributeArr[self.index];
     
     if (!_currentLabel) {
         _currentLabel = [[UILabel alloc] init];
         [self trotingWithAttribute:trotingAtt];
         [self addTrotView:_currentLabel];
+    } else {
+        if (!self.isTroting) {
+            [self trotingWithAttribute:trotingAtt];
+            [self updateTroting];
+        }
     }
 }
 
@@ -67,6 +86,22 @@
     CCZTrotingAttribute *trotingAtt = [[CCZTrotingAttribute alloc] init];
     trotingAtt.text = text;
     [self addTrotAttribute:trotingAtt];
+}
+
+- (void)addTextArray:(NSArray *)textArray {
+    for (id text in textArray) {
+        if ([text isKindOfClass:[NSString class]]) {
+            [self addText:text];
+        }
+    }
+}
+
+- (void)addAttributeArray:(NSArray *)attArray {
+    for (id att in attArray) {
+        if ([att isKindOfClass:[CCZTrotingAttribute class]]) {
+            [self addTrotAttribute:att];
+        }
+    }
 }
 
 - (void)trotingWithAttribute:(CCZTrotingAttribute *)att {
@@ -87,6 +122,24 @@
         }
     }];
 }
+
+#pragma mark - remove
+
+- (void)removeAttributeAtIndex:(NSUInteger)index {
+    if (index <= self.attributeArr.count - 1) {
+        [self.attributeArr removeObjectAtIndex:index];
+        if (self.index >= index) {
+            self.index--;
+        }
+    }
+}
+
+- (void)removeAllAttribute {
+    [self.attributeArr removeAllObjects];
+    self.index = 0;
+}
+
+#pragma mark - set
 
 - (void)setRate:(CCZTrotingRate)rate {
     _rate = rate;
