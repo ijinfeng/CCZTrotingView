@@ -1,7 +1,7 @@
 # CCZTrotingView
 
 ### 温馨提示
-[请去下载最新无错版，支持更多的功能，因为最新的和这个版本的实现不同，因此在这里我还是留着](https://github.com/CranzCapatain/CCZAngelWalker)
+[⬇️点击这里下载最新无错版，支持更多的功能，因为最新的和这个版本的实现不同，因此在这里我还是留着](https://github.com/CranzCapatain/CCZAngelWalker)
 
 
 
